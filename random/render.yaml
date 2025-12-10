@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: springboot-friendmatcher          # Name of your service on Render
+    env: java                               # Runtime environment (Java)
+    plan: free                              # Free tier plan (750 hours/month)
+    region: oregon                          # Choose closest region (e.g., oregon, frankfurt)
+
+    buildCommand: "./mvnw clean package"    # Build using Maven wrapper
+    startCommand: "java -jar target/friendmatcher-0.0.1-SNAPSHOT.jar"
+
+    autoDeploy: true                        # Auto-deploy on every GitHub push
+
+    envVars:                                # Environment variables
+      - key: PORT
+        value: 8080                         # Spring Boot binds to Render's dynamic port
+      - key: JAVA_VERSION
+        value: 17                           # Render provides Java 17 runtime
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod                         # Optional: activate production profile
+
+    healthCheckPath: "/"                    # Render checks this path for app health
+
+    disk:                                   # Optional persistent storage
+      name: app-data
+      mountPath: /var/data
+      sizeGB: 1
